@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CustomAlertbox.iml" filepath="$PROJECT_DIR$/.idea/CustomAlertbox.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CustomAlertBox.iml" filepath="$PROJECT_DIR$/.idea/modules/CustomAlertBox.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CustomAlertBox.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CustomAlertBox.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customalertbox/CustomAlertBox.customalertbox.iml" filepath="$PROJECT_DIR$/.idea/modules/customalertbox/CustomAlertBox.customalertbox.iml" />
     </modules>
   </component>
 </project>

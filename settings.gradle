@@ -1,2 +1,3 @@
+include ':customalertbox'
 include ':app'
 rootProject.name = "CustomAlertBox"
