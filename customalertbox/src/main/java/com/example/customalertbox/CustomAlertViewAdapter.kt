@@ -7,7 +7,6 @@ import com.example.customalertbox.databinding.CustomAlertViewBinding
 
 class CustomAlertViewAdapter(
     private val onItemClick: (type: Int) -> Unit
-
 ) :
     RecyclerView.Adapter<CustomAlertViewAdapter.RecycleViewHolder>() {
 
@@ -27,7 +26,8 @@ class CustomAlertViewAdapter(
     override fun onBindViewHolder(holder: RecycleViewHolder, position: Int) {
         holder.apply {
             itemView.apply {
-                setOnClickListener {
+                binding.btnAction.text = items[position].actionText
+                binding.btnAction.setOnClickListener {
                     onItemClick.invoke(position)
                 }
             }
@@ -36,5 +36,4 @@ class CustomAlertViewAdapter(
 
     class RecycleViewHolder(binding: CustomAlertViewBinding) :
         RecyclerView.ViewHolder(binding.root)
-
 }

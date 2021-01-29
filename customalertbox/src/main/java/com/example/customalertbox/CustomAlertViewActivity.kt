@@ -1,12 +1,14 @@
 package com.example.customalertbox
 
+import android.app.AlertDialog
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customalertbox.databinding.ActivityCustomAlertViewBinding
+import com.example.customalertbox.databinding.AlertBoxViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class CustomAlertViewActivity(
@@ -18,30 +20,44 @@ class CustomAlertViewActivity(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityCustomAlertViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
 
     fun showAlertView(
-        context: Context,
-        alertView: AlertViewModel
+        context: Context, actionData: AlertViewModel
     ) {
-        val dialog = AlertDialog.Builder(context)
+        val bindingSheet = AlertBoxViewBinding.inflate(LayoutInflater.from(context))
+        val builder = AlertDialog.Builder(context)
+        builder.setView(bindingSheet.root)
 
-        binding.tvTitle.text = alertView.title
-        binding.tvMessage.text = alertView.message
+        bindingSheet.tvTitle.text = actionData.title
+        bindingSheet.tvMessage.text = actionData.message
         customAlertViewAdapter = CustomAlertViewAdapter(
             onItemClick = {
                 onActionItemClick.invoke(it)
-                //actionData[it].onItemClick.invoke()
+                actionData.alertViewDataModel[it].onItemClick.invoke()
             }
         )
-        binding.rvActionView.apply {
-            layoutManager = LinearLayoutManager(context)
+
+        val layoutManagerGrid =
+            GridLayoutManager(context, 2)
+        layoutManagerGrid.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if ((actionData.alertViewDataModel.size) % 2 != 0 && position == (actionData.alertViewDataModel.size - 1)) {
+                        2
+                    } else {
+                        1
+                    }
+                }
+            }
+        bindingSheet.rvActionView.apply {
+            layoutManager = layoutManagerGrid
             adapter = customAlertViewAdapter
         }
 
-       // customAlertViewAdapter.items = alertView
+        customAlertViewAdapter.items = actionData.alertViewDataModel
+        builder.show()
     }
 }
