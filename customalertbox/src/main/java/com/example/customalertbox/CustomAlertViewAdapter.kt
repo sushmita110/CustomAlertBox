@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.customalertbox.databinding.CustomAlertViewBinding
 
 class CustomAlertViewAdapter(
-    private val onItemClick: (type: Int) -> Unit
+    private val onItemClick: (type: MutableList<AlertViewDataModel>, position: Int) -> Unit
 ) :
     RecyclerView.Adapter<CustomAlertViewAdapter.RecycleViewHolder>() {
 
@@ -28,7 +28,7 @@ class CustomAlertViewAdapter(
             itemView.apply {
                 binding.btnAction.text = items[position].actionText
                 binding.btnAction.setOnClickListener {
-                    onItemClick.invoke(position)
+                    onItemClick.invoke(items, position)
                 }
             }
         }

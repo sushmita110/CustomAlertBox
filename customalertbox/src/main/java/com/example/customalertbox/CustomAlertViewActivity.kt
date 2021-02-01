@@ -1,18 +1,21 @@
 package com.example.customalertbox
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customalertbox.databinding.ActivityCustomAlertViewBinding
 import com.example.customalertbox.databinding.AlertBoxViewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
+
 
 class CustomAlertViewActivity(
-    private val onActionItemClick: (type: Int) -> Unit
+    private val onActionItemClick: (type: MutableList<AlertViewDataModel>) -> Unit
 ) : AppCompatActivity() {
 
     lateinit var binding: ActivityCustomAlertViewBinding
@@ -27,16 +30,19 @@ class CustomAlertViewActivity(
     fun showAlertView(
         context: Context, actionData: AlertViewModel
     ) {
-        val bindingSheet = AlertBoxViewBinding.inflate(LayoutInflater.from(context))
+        val bindingAlert = AlertBoxViewBinding.inflate(LayoutInflater.from(context))
         val builder = AlertDialog.Builder(context)
-        builder.setView(bindingSheet.root)
+            .setView(bindingAlert.root)
+            .show()
 
-        bindingSheet.tvTitle.text = actionData.title
-        bindingSheet.tvMessage.text = actionData.message
+        bindingAlert.tvTitle.text = actionData.title
+        bindingAlert.tvMessage.text = actionData.message
+
         customAlertViewAdapter = CustomAlertViewAdapter(
-            onItemClick = {
+            onItemClick = { it, position ->
                 onActionItemClick.invoke(it)
-                actionData.alertViewDataModel[it].onItemClick.invoke()
+                actionData.alertViewDataModel[position].onItemClick.invoke()
+                builder.dismiss()
             }
         )
 
@@ -52,12 +58,15 @@ class CustomAlertViewActivity(
                     }
                 }
             }
-        bindingSheet.rvActionView.apply {
-            layoutManager = layoutManagerGrid
+        bindingAlert.rvActionView.apply {
+            layoutManager = if ((actionData.alertViewDataModel.size) >= 3) {
+                LinearLayoutManager(context)
+            } else {
+                layoutManagerGrid
+            }
             adapter = customAlertViewAdapter
         }
 
         customAlertViewAdapter.items = actionData.alertViewDataModel
-        builder.show()
     }
 }
