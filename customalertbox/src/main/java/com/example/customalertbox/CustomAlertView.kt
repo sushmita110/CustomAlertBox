@@ -2,45 +2,43 @@ package com.example.customalertbox
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
+import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.customalertbox.databinding.ActivityCustomAlertViewBinding
 import com.example.customalertbox.databinding.AlertBoxViewBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+class CustomAlertView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-class CustomAlertViewActivity(
-    private val onActionItemClick: (type: MutableList<AlertViewDataModel>) -> Unit
-) : AppCompatActivity() {
+    var bindingAlert: AlertBoxViewBinding
 
-    lateinit var binding: ActivityCustomAlertViewBinding
     lateinit var customAlertViewAdapter: CustomAlertViewAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCustomAlertViewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    init {
+        bindingAlert = AlertBoxViewBinding.inflate(LayoutInflater.from(context), null, true)
+       addView(bindingAlert.root)
     }
 
-    fun showAlertView(
-        context: Context, actionData: AlertViewModel, style: Int? = null
+    fun setUpData(
+        onActionItemClick: (type: MutableList<AlertViewDataModel>) -> Unit,
+        context: Context,
+        actionData: AlertViewModel,
+        style: Int? = null
     ) {
-        val bindingAlert = AlertBoxViewBinding.inflate(LayoutInflater.from(context))
+
         val builder = AlertDialog.Builder(context)
             .setView(bindingAlert.root)
 
         val dialog = builder.create()
-        bindingAlert.clAlertDialog.animateView(400,0, R.anim.anim_zoom_in)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
-
 
         bindingAlert.tvTitle.text = actionData.title
         bindingAlert.tvMessage.text = actionData.message
@@ -48,18 +46,22 @@ class CustomAlertViewActivity(
         bindingAlert.tvMessage.setTextAppearance(style ?: 0)
         bindingAlert.tvTitle.setTextAppearance(style ?: 0)
 
+        bindingAlert.clAlertDialog.animateView(400, 0, R.anim.anim_zoom_in)
+
         customAlertViewAdapter = CustomAlertViewAdapter(
             onItemClick = { it, position ->
-                bindingAlert.clAlertDialog.animateView(300,100, R.anim.anim_zoom_out)
+
+                //bindingAlert.clAlertDialog.animateView(400, 0, R.anim.anime_test)
 
                 onActionItemClick.invoke(it)
                 actionData.alertViewDataModel[position].onItemClick.invoke()
                 GlobalScope.launch {
-                    delay(200)
+                    delay(300)
                     dialog.dismiss()
 
                 }
-            })
+            }
+        )
 
         val layoutManagerGrid =
             GridLayoutManager(context, 2)
@@ -83,5 +85,7 @@ class CustomAlertViewActivity(
         }
 
         customAlertViewAdapter.items = actionData.alertViewDataModel
+
+
     }
 }
