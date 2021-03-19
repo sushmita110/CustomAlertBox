@@ -30,14 +30,14 @@ class CustomAlertViewActivity(
     }
 
     fun showAlertView(
-        context: Context, actionData: AlertViewModel, style: Int? = null
+        context: Context, actionData: AlertViewModel, configModel: ConfigModel
     ) {
         val bindingAlert = AlertBoxViewBinding.inflate(LayoutInflater.from(context))
         val builder = AlertDialog.Builder(context)
             .setView(bindingAlert.root)
 
         val dialog = builder.create()
-        bindingAlert.clAlertDialog.animateView(400,0, R.anim.anim_zoom_in)
+        bindingAlert.clAlertDialog.animateView(400, 0, R.anim.anim_zoom_in)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
 
@@ -45,19 +45,16 @@ class CustomAlertViewActivity(
         bindingAlert.tvTitle.text = actionData.title
         bindingAlert.tvMessage.text = actionData.message
 
-        bindingAlert.tvMessage.setTextAppearance(style ?: 0)
-        bindingAlert.tvTitle.setTextAppearance(style ?: 0)
-
         customAlertViewAdapter = CustomAlertViewAdapter(
+            configModel.tintColor,
             onItemClick = { it, position ->
-                bindingAlert.clAlertDialog.animateView(300,100, R.anim.anim_zoom_out)
+                bindingAlert.clAlertDialog.animateView(300, 100, R.anim.anim_zoom_out)
 
                 onActionItemClick.invoke(it)
                 actionData.alertViewDataModel[position].onItemClick.invoke()
                 GlobalScope.launch {
                     delay(200)
                     dialog.dismiss()
-
                 }
             })
 

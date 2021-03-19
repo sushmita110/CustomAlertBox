@@ -17,42 +17,46 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnClick.setOnClickListener {
-            val actionText = mutableListOf<AlertViewDataModel>()
-
-            val actionOk = AlertViewDataModel(
-                "Ok",
-                onItemClick = {
-                    Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show()
-                }
-            )
-            val actionCancel = AlertViewDataModel(
-                "Cancel",
-                onItemClick = {
-                    Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show()
-                }
-            )
-            val actionNotNow = AlertViewDataModel(
-                "Not Now",
-                onItemClick = {
-                    Toast.makeText(this, "Not Now", Toast.LENGTH_LONG).show()
-                }
-            )
-
-            actionText.add(actionOk)
-            actionText.add(actionCancel)
-            actionText.add(actionNotNow)
-
-            val alertData = AlertViewModel(
-                title = "Test",
-                message = "Hello World",
-                actionText
-            )
-
-            customAlertViewActivity = CustomAlertViewActivity(
-                onActionItemClick = {
-                }
-            )
-            customAlertViewActivity.showAlertView(this, alertData)
+            showAlertBox()
         }
+    }
+
+    private fun showAlertBox() {
+        val actionText = mutableListOf<AlertViewDataModel>()
+
+        val actionOk = AlertViewDataModel(
+            "Ok",
+            onItemClick = {
+                Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show()
+            }
+        )
+        val actionCancel = AlertViewDataModel(
+            "Cancel",
+            onItemClick = {
+                Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show()
+            }
+        )
+        val actionNotNow = AlertViewDataModel(
+            "Not Now",
+            onItemClick = {
+                Toast.makeText(this, "Not Now", Toast.LENGTH_LONG).show()
+            }
+        )
+
+        actionText.add(actionOk)
+        actionText.add(actionCancel)
+        actionText.add(actionNotNow)
+
+        val alertData = AlertViewModel(
+            title = "Logout",
+            message = "Are you sure you want to logout?",
+            actionText
+        )
+
+        customAlertViewActivity = CustomAlertViewActivity(
+            onActionItemClick = {
+            }
+        )
+        customAlertViewActivity.showAlertView(this, alertData, ConfigModel(tintColor = R.color.colorPrimary))
     }
 }

@@ -2,19 +2,18 @@ package com.example.customalertbox
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.customalertbox.databinding.CustomAlertViewBinding
 
 class CustomAlertViewAdapter(
+    private val tintColor: Int? = null,
     private val onItemClick: (
         type: MutableList<AlertViewDataModel>, position: Int
-    ) -> Unit,
-    style: Int? = null
-) :
+    ) -> Unit) :
     RecyclerView.Adapter<CustomAlertViewAdapter.RecycleViewHolder>() {
 
     lateinit var binding: CustomAlertViewBinding
-    var style = style
     var items: MutableList<AlertViewDataModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleViewHolder {
@@ -31,8 +30,9 @@ class CustomAlertViewAdapter(
         holder.apply {
             itemView.apply {
                 binding.btnAction.text = items[position].actionText
-                binding.btnAction.setTextAppearance(style ?: 0)
-
+                tintColor?.let { ContextCompat.getColor(context, it) }?.let {
+                    binding.btnAction.setBackgroundColor(it)
+                }
                 binding.btnAction.setOnClickListener {
                     onItemClick.invoke(items, position)
                 }
